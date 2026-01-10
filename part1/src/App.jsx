@@ -7,6 +7,8 @@ const handleDivision = (dividend, divisor) => {
     return dividend / divisor
 }
 
+const FeedbackButton = ({onClick, text}) => <button onClick={onClick}>{text}</button>
+
 const Statistics = ({good, neutral, bad}) => {
     const total = good + neutral + bad
     if (total === 0) {
@@ -15,15 +17,17 @@ const Statistics = ({good, neutral, bad}) => {
     return (
         <div>
             <h1>statistics</h1>
-            <p>good {good}</p>
-            <p>neutral {neutral}</p>
-            <p>bad {bad}</p>
-            <p>all {total}</p>
-            <p>average {handleDivision((good - bad), total)}</p>
-            <p>positive {handleDivision((good * 100), total)}</p>
+            <StatisticLine statName="good" value={good} />
+            <StatisticLine statName="neutral" value={neutral} />
+            <StatisticLine statName="bad" value={bad} />
+            <StatisticLine statName="all" value={total} />
+            <StatisticLine statName="average" value={handleDivision((good - bad), total)} />
+            <StatisticLine statName="positive" value={handleDivision((good * 100), total)} suffix={" %"} />
         </div>
     )
 }
+
+const StatisticLine = ({statName, value, suffix = ""}) => <p>{statName}: {value}{suffix}</p>
 
 const App = () => {
     const [good, setGood] = useState(0)
@@ -33,9 +37,9 @@ const App = () => {
     return (
         <div>
             <h1>give feedback</h1>
-            <button onClick={() => setGood(good + 1)} >good</button>
-            <button onClick={() => setNeutral(neutral + 1)} >neutral</button>
-            <button onClick={() => setBad(bad + 1)} >bad</button>
+            <FeedbackButton onClick={() => setGood(good + 1)} text={"good"} />
+            <FeedbackButton onClick={() =>setNeutral(neutral + 1)} text={"neutral"} />
+            <FeedbackButton onClick={() =>setBad(bad + 1)} text={"bad"} />
             <Statistics good={good} neutral={neutral} bad={bad} />
         </div>
     )
