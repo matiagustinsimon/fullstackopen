@@ -39,7 +39,14 @@ const StatisticLine = ({statName, value, suffix = ""}) => {
         </tr>
     )
 }
-
+const ShowAnecdote = ({anecdote, vote}) => {
+    return (
+        <div>
+            <p>{anecdote}</p>
+            <p>has {vote} votes</p>
+        </div>
+    )
+}
 const Anecdote = () => {
     const anecdotes = [
         'If it hurts, do it more often.',
@@ -64,13 +71,30 @@ const Anecdote = () => {
         votesNew[selected] += 1
         setVotes(votesNew)
     }
+    const maxAnecdote = () => {
+        let max = 0, maxIndex = null
+        votes.forEach((vote, index) => {
+            if (vote > max) {
+                max = vote
+                maxIndex = index
+            }
+        })
+        if (maxIndex === null) {
+            return (<p>There is no favorite yet.</p>)
+        }
+        return (
+            <ShowAnecdote anecdote={anecdotes[maxIndex]} vote={max}/>
+        )
+    }
 
     return (
         <div>
-            <p>{anecdotes[selected]}</p>
-            <p>has {votes[selected]} votes</p>
+            <h1>Anecdote of the day</h1>
+            <ShowAnecdote anecdote={anecdotes[selected]} vote={votes[selected]}/>
             <button onClick={handleVote} >vote</button>
             <button onClick={handleClick} >next anecdote</button>
+            <h1>Anecdote with most votes</h1>
+            {maxAnecdote()}
         </div>
     )
 }
