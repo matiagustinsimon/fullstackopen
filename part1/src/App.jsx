@@ -1,10 +1,17 @@
 import { useState } from 'react'
 
 const App = () => {
-    // save clicks of each button to its own state
     const [good, setGood] = useState(0)
     const [neutral, setNeutral] = useState(0)
     const [bad, setBad] = useState(0)
+    const total = good + neutral + bad
+
+    const handleDivision = (dividend, divisor) => {
+        if (divisor === 0) {
+            return 0
+        }
+        return dividend / divisor
+    }
 
     return (
         <div>
@@ -16,6 +23,10 @@ const App = () => {
             <p>good {good}</p>
             <p>neutral {neutral}</p>
             <p>bad {bad}</p>
+            <p>all {total}</p>
+            <p>average {handleDivision((good - bad), total)}</p>
+            <p>positive {handleDivision((good * 100), total)}</p>
+
         </div>
     )
 }
