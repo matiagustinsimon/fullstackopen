@@ -19489,7 +19489,7 @@ var require_react_dom_client_development = __commonJS({
         "datetime-local": true,
         email: true,
         month: true,
-        number: true,
+        phone: true,
         password: true,
         range: true,
         search: true,
