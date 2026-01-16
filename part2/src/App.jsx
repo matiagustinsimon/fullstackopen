@@ -5,11 +5,11 @@ const Filter = ({value, onChange}) => (
     <div>filter shown with <input value={value} onChange={onChange}/></div>
 )
 
-const PersonForm = ({onSubmit, newName, handleName, newNumber, handleNumber}) => {
+const PersonForm = ({onSubmit, newName, newNumber, handlePerson}) => {
     return (
         <form onSubmit={onSubmit}>
-            <div>name: <input value={newName} onChange={handleName}/></div>
-            <div>number: <input value={newNumber} onChange={handleNumber}/></div>
+            <div>name: <input name="name" value={newName} onChange={handlePerson}/></div>
+            <div>number: <input name="number" value={newNumber} onChange={handlePerson}/></div>
             <div>
                 <button type="submit">add</button>
             </div>
@@ -33,9 +33,12 @@ const Persons = ({personsToShow}) => {
 
 const App = () => {
     const [persons, setPersons] = useState([])
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
+    const [newPerson, setNewPerson] = useState({
+        name: '',
+        number: ''
+    })
     const [search, setSearch] = useState('')
+    console.log(newPerson)
 
     const handleFetch = () => {
         axios.get('http://localhost:3001/persons').then((response) => {
@@ -51,26 +54,37 @@ const App = () => {
             person.name.toLowerCase().includes(search.toLowerCase())
         )
 
-    const handleNameChange = event => setNewName(event.target.value)
-    const handleNumberChange = event => setNewNumber(event.target.value)
+    const handleNewPersonChange = event => {
+        setNewPerson({
+            ...newPerson,
+            [event.target.name]: event.target.value
+        })
+    }
+
     const handleSearchChange = event => setSearch(event.target.value)
 
     const addPerson = event => {
         event.preventDefault()
-        if (persons.some(person => person.name.trim() === newName.trim())) {
-            alert(`${newName} is already added to phonebook`)
+        if (persons.some(person => person.name.trim() === newPerson.name.trim())) {
+            alert(`${newPerson.name} is already added to phonebook`)
             return
         }
 
         const newPersonObject = {
-            name: newName.trim(),
-            number: newNumber.trim(),
-            id: String(persons.length + 1)
+            name: newPerson.name.trim(),
+            number: newPerson.number.trim(),
         }
+        axios
+            .post('http://localhost:3001/persons', newPersonObject)
+            .then((response) => {
+                setPersons(persons.concat(response.data))
+                setNewPerson({
+                    name: '',
+                    number: ''
+                })
+            })
 
-        setPersons(persons.concat(newPersonObject))
-        setNewName('')
-        setNewNumber('')
+
     }
 
     return (
@@ -83,10 +97,9 @@ const App = () => {
 
             <PersonForm
                 onSubmit={addPerson}
-                newName={newName}
-                handleName={handleNameChange}
-                newNumber={newNumber}
-                handleNumber={handleNumberChange}
+                newName={newPerson.name}
+                newNumber={newPerson.number}
+                handlePerson={handleNewPersonChange}
             />
 
             <h3>Numbers</h3>
