@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import axios from 'axios'
+import personService from "./services/persons.js";
 
 const Filter = ({value, onChange}) => (
     <div>filter shown with <input value={value} onChange={onChange}/></div>
@@ -41,9 +41,7 @@ const App = () => {
     console.log(newPerson)
 
     const handleFetch = () => {
-        axios.get('http://localhost:3001/persons').then((response) => {
-            setPersons(response.data)
-        })
+        personService.getAll().then(initialPersons => {setPersons(initialPersons)})
     }
 
     useEffect(handleFetch, [])
@@ -74,10 +72,9 @@ const App = () => {
             name: newPerson.name.trim(),
             number: newPerson.number.trim(),
         }
-        axios
-            .post('http://localhost:3001/persons', newPersonObject)
-            .then((response) => {
-                setPersons(persons.concat(response.data))
+        personService.create(newPersonObject)
+            .then((returnedPerson) => {
+                setPersons(persons.concat(returnedPerson))
                 setNewPerson({
                     name: '',
                     number: ''
