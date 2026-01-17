@@ -7,6 +7,9 @@ const getAll = () => axios.get(url)
 const create = newObject => axios.post(url, newObject)
     .then((response) => response.data)
 
+const update = (id, newObject) => axios.put(`${url}/${id}`, newObject)
+    .then((response) => response.data)
+
 const remove = id => axios.delete(`${url}/${id}`)
 
-export default { getAll, create, remove}
+export default { getAll, create, update, remove}
