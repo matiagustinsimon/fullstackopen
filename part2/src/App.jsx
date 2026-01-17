@@ -17,15 +17,15 @@ const PersonForm = ({onSubmit, newName, newNumber, handlePerson}) => {
     )
 }
 
-const Person = ({name, number}) => {
-    return (<li>{name} {number}</li>)
+const Person = ({person, handleDelete}) => {
+    return (<li>{person.name} {person.number} <button onClick={() => handleDelete(person)}>delete</button></li>)
 }
 
-const Persons = ({personsToShow}) => {
+const Persons = ({personsToShow, handleDelete}) => {
     return (
         <ul>
             {personsToShow.map(person =>
-                <Person key={person.id} name={person.name} number={person.number}/>
+                <Person key={person.id} person={person} handleDelete={handleDelete}/>
             )}
         </ul>
     )
@@ -38,13 +38,14 @@ const App = () => {
         number: ''
     })
     const [search, setSearch] = useState('')
-    console.log(newPerson)
 
-    const handleFetch = () => {
-        personService.getAll().then(initialPersons => {setPersons(initialPersons)})
-    }
-
-    useEffect(handleFetch, [])
+    useEffect(() => {
+        personService
+            .getAll()
+            .then(initialPersons => {
+                setPersons(initialPersons)
+            })
+    }, [])
 
     const personsToShow = search === ''
         ? persons
@@ -84,6 +85,13 @@ const App = () => {
 
     }
 
+    const handleDelete = personToDelete => {
+        if (window.confirm(`Delete ${personToDelete.name}?`)) {
+        personService
+            .remove(personToDelete.id)
+            .then(() => {setPersons(persons.filter(person => person.id !== personToDelete.id))})}
+    }
+
     return (
         <div>
             <h2>Phonebook</h2>
@@ -100,7 +108,7 @@ const App = () => {
             />
 
             <h3>Numbers</h3>
-            <Persons personsToShow={personsToShow}/>
+            <Persons personsToShow={personsToShow} handleDelete={handleDelete}/>
         </div>
     )
 }

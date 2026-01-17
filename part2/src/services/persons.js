@@ -7,4 +7,6 @@ const getAll = () => axios.get(url)
 const create = newObject => axios.post(url, newObject)
     .then((response) => response.data)
 
-export default { getAll, create }
+const remove = id => axios.delete(`${url}/${id}`)
+
+export default { getAll, create, remove}
