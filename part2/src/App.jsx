@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import personService from "./services/persons.js";
+import Notification from "./components/Notification.jsx";
 
 const Filter = ({value, onChange}) => (
     <div>filter shown with <input value={value} onChange={onChange}/></div>
@@ -40,6 +41,7 @@ const App = () => {
         number: ''
     })
     const [search, setSearch] = useState('')
+    const [message, setMessage] = useState(null)
 
     useEffect(() => {
         personService
@@ -64,6 +66,13 @@ const App = () => {
 
     const handleSearchChange = event => setSearch(event.target.value)
 
+    function showNotification(text) {
+        setMessage(text)
+        setTimeout(() => {
+            setMessage(null)
+        }, 5000)
+    }
+
     const addPerson = event => {
         event.preventDefault()
         const existingPerson = persons.find(person => person.name.trim() === newPerson.name.trim())
@@ -79,6 +88,7 @@ const App = () => {
                     .then(updatedPerson => {
                         setPersons(persons.map(p => (updatedPerson.id === p.id) ? updatedPerson : p))
                         setNewPerson({ name: '', number: '' })
+                        showNotification(`Updated ${updatedPerson.name}`)
                     })
                 return;
             }
@@ -96,6 +106,7 @@ const App = () => {
                     name: '',
                     number: ''
                 })
+                showNotification(`Added ${returnedPerson.name}`)
             })
 
 
@@ -114,6 +125,8 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+
+            <Notification message={message} />
 
             <Filter value={search} onChange={handleSearchChange}/>
 
