@@ -1,6 +1,13 @@
-const Notification = ({message}) => {
-    if (message === undefined) {
+const Notification = ({message, type}) => {
+    if (message === null) {
         return null
+    }
+    if (type === 'error') {
+        return (
+            <div className="Error">
+                {message}
+            </div>
+        )
     }
     return (
         <div className="Notification">

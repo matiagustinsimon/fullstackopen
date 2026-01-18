@@ -41,7 +41,10 @@ const App = () => {
         number: ''
     })
     const [search, setSearch] = useState('')
-    const [message, setMessage] = useState(null)
+    const [message, setMessage] = useState({
+        text: null,
+        type: 'text'
+    })
 
     useEffect(() => {
         personService
@@ -66,10 +69,13 @@ const App = () => {
 
     const handleSearchChange = event => setSearch(event.target.value)
 
-    function showNotification(text) {
-        setMessage(text)
+    function showNotification(text, error) {
+        error ? setMessage({text: text, type: 'error'}) : setMessage({text: text, type: 'text'})
         setTimeout(() => {
-            setMessage(null)
+            setMessage({
+                text: null,
+                type: 'text'
+            })
         }, 5000)
     }
 
@@ -88,7 +94,12 @@ const App = () => {
                     .then(updatedPerson => {
                         setPersons(persons.map(p => (updatedPerson.id === p.id) ? updatedPerson : p))
                         setNewPerson({ name: '', number: '' })
-                        showNotification(`Updated ${updatedPerson.name}`)
+                        showNotification(`Updated ${updatedPerson.name}`, false)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        showNotification(`Information of ${existingPerson.name} has already been removed from the server`, true)
+                        setPersons(persons.filter(n => n.id !== existingPerson.id))
                     })
                 return;
             }
@@ -106,7 +117,7 @@ const App = () => {
                     name: '',
                     number: ''
                 })
-                showNotification(`Added ${returnedPerson.name}`)
+                showNotification(`Added ${returnedPerson.name}`, false)
             })
 
 
@@ -126,7 +137,7 @@ const App = () => {
         <div>
             <h2>Phonebook</h2>
 
-            <Notification message={message} />
+            <Notification message={message.text} type={message.type}/>
 
             <Filter value={search} onChange={handleSearchChange}/>
 
