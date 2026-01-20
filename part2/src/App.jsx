@@ -21,19 +21,51 @@ const ListLanguages = ({languages}) => {
     return languages.map(language => (<li key={language}>{language}</li>))
 }
 
+const ShowWeather = ({weather, country}) => {
+    if (!weather) return <p>Loading weather...</p>
+
+    const icon = weather.weather[0].icon
+    return (
+        <div>
+            <h3>Weather in {country.capital}</h3>
+            <dl>
+                <dt>Temperature:</dt>
+                <dd>{weather.main.temp} Celsius</dd>
+            </dl>
+            <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} alt="Weather Icon"/>
+            <dl>
+                <dt>Wind:</dt>
+                <dd>{weather.wind.speed} m/s</dd>
+            </dl>
+        </div>
+    )
+}
+
 const ShowCountryInfo = ({country}) => {
+    const [weather, setWeather] = useState(null)
     const languagesArray = Object.values(country.languages || {});
+    useEffect(() => {
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${country.capital}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`)
+        .then(res => {setWeather(res.data);})
+    },[country.capital])
+    console.log(weather);
 
     return (
         <>
             <h1>{country.name.common}</h1>
-            <p>Capital: {country.capital}</p>
-            <p>Area: {country.area}</p>
-            <h1>Languages</h1>
+            <dl>
+                <dt>Capital:</dt>
+                <dd>{country.capital}</dd>
+
+                <dt>Area:</dt>
+                <dd>{country.area}</dd>
+            </dl>
+            <h2>Languages</h2>
             <ul>
                 <ListLanguages languages={languagesArray} />
             </ul>
             <img src={country.flags.png} alt={`Flag of ${country.name.common}`}/>
+            <ShowWeather weather={weather} country={country}/>
         </>
     )
 }
