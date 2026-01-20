@@ -3,11 +3,17 @@ import axios from 'axios'
 
 const itMatch = (first, second) => first.toLowerCase().includes(second.toLowerCase())
 
-const ShowMatchingList = ({countries}) => {
+const ListCountry = ({country, search}) => {
+    const handleShow = () => search(country.name.common)
+    return(<li>{country.name.common} <button onClick={handleShow}>Show</button></li>)
+}
+
+const ShowMatchingList = ({countries, search}) => {
+    console.log(countries);
     return (
-        <div>
-            {countries.map(country => (<li key={country.cca3}>{country.name.common}</li>))}
-        </div>
+        <ul>
+            {countries.map(country => (<ListCountry key={country.cca3} country={country} search={search}/>))}
+        </ul>
     )
 }
 
@@ -15,19 +21,7 @@ const ListLanguages = ({languages}) => {
     return languages.map(language => (<li key={language}>{language}</li>))
 }
 
-const ShowCountry = ({countries}) => {
-    console.log(`Array: ${countries}`);
-    const countriesSize = countries.length
-    if (countriesSize === 0) {
-        return <p>Type a country name</p>
-    }
-    if (countriesSize > 1 && countriesSize <= 10) {
-        return <ShowMatchingList countries={countries} />
-    }
-    if (countriesSize > 10) {
-        return <p>Too many matches specify another filter</p>
-    }
-    const country = countries[0]
+const ShowCountryInfo = ({country}) => {
     const languagesArray = Object.values(country.languages || {});
 
     return (
@@ -44,11 +38,26 @@ const ShowCountry = ({countries}) => {
     )
 }
 
+const ShowCountry = ({countries, search}) => {
+    const countriesSize = countries.length
+    if (countriesSize === 0) {
+        return <p>Type a country name</p>
+    }
+    if (countriesSize > 1 && countriesSize <= 10) {
+        return <ShowMatchingList countries={countries} search={search} />
+    }
+    if (countriesSize > 10) {
+        return <p>Too many matches specify another filter</p>
+    }
+    return (
+        <ShowCountryInfo country={countries[0]} />
+    )
+}
+
 const App = () => {
     const [search, setSearch] = useState('')
     const [countries, setCountries] = useState([])
     const [countriesToShow, setCountriesToShow] = useState([])
-    console.log(`Search: ${search}`);
     const url = 'https://studies.cs.helsinki.fi/restcountries/api/all'
 
     const getAll = () => {
@@ -66,7 +75,7 @@ const App = () => {
     return (
         <div>
             find countries <input value={search} onChange={handleChange}/>
-            <ShowCountry countries={countriesToShow} />
+            <ShowCountry countries={countriesToShow} search={setSearch} />
         </div>
     )
 }
