@@ -3,7 +3,7 @@ const app = express()
 
 app.use(express.json())
 
-let personsJson = [
+let personsJSON = [
     {
         "id": "1",
         "name": "Arto Hellas",
@@ -25,43 +25,30 @@ let personsJson = [
         "number": "39-23-6423122"
     }
 ]
-
-
-// app.get('/api/notes/:id', (request, response) => {
-//     const id = request.params.id
-//     const note = notes.find(note => note.id === id)
-//     if (note) {
-//         response.json(note)
-//     } else {
-//         response.status(404).end()
-//     }
-// })
+personsJSON.map(person => console.log(person))
 
 app.get('/api/persons', (request, response) => {
-    response.json(personsJson)
+    response.json(personsJSON)
 })
 
 app.get('/info', (request, response) => {
     const fecha = Date()
     response.send(`
-        <p>Phonebook has info for ${personsJson.length} people</p>
+        <p>Phonebook has info for ${personsJSON.length} people</p>
         <p>${fecha}</p>`)
 })
 
-// app.post('/api/notes', (request, response) => {
-//     const note = request.body
-//     console.log(note)
-//     response.json(note)
-// })
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = personsJSON.find(p => p.id === id)
 
-// app.delete('/api/notes/:id', (request, response) => {
-//     const id = request.params.id
-//     notes = notes.filter(note => note.id !== id)
-//
-//     response.status(204).end()
-// })
+    if (person) {
+        response.json(person)
+    } else {
+        response.status(404).end()
+    }
 
-
+})
 
 const PORT = 3001
 app.listen(PORT, () => {

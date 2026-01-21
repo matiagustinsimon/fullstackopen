@@ -3,8 +3,8 @@ GET http://localhost:3001/info
 
 ###
 
-### Obtener una sola nota (GET)
-GET http://localhost:3001/api/notes/1
+### Obtener una sola persona (GET)
+GET http://localhost:3001/api/persons/1
 
 ###
 
