@@ -1,5 +1,5 @@
-### Obtener todas las notas (GET)
-GET http://localhost:3001/api/notes
+### Obtener info
+GET http://localhost:3001/info
 
 ###
 

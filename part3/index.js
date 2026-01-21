@@ -41,6 +41,13 @@ app.get('/api/persons', (request, response) => {
     response.json(personsJson)
 })
 
+app.get('/info', (request, response) => {
+    const fecha = Date()
+    response.send(`
+        <p>Phonebook has info for ${personsJson.length} people</p>
+        <p>${fecha}</p>`)
+})
+
 // app.post('/api/notes', (request, response) => {
 //     const note = request.body
 //     console.log(note)
