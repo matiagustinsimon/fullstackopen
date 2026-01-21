@@ -1,0 +1,23 @@
+### Obtener todas las notas (GET)
+GET http://localhost:3001/api/notes
+
+###
+
+### Obtener una sola nota (GET)
+GET http://localhost:3001/api/notes/1
+
+###
+
+### Borrar una nota (DELETE) - ¡Lo que querías probar!
+DELETE http://localhost:3001/api/notes/1
+
+###
+
+### Crear una nota nueva (POST) - Para probar después
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "VS code rest client is a pretty handy tool",
+  "important": true
+}
