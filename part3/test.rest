@@ -14,10 +14,10 @@ DELETE http://localhost:3001/api/persons/1
 ###
 
 ### Crear una nota nueva (POST) - Para probar después
-POST http://localhost:3001/api/notes
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "content": "VS code rest client is a pretty handy tool",
-  "important": true
+  "name": "Matías",
+  "number": "351 390-1890"
 }

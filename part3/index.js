@@ -27,6 +27,14 @@ let personsJSON = [
 ]
 personsJSON.map(person => console.log(person))
 
+const generateId = () => {
+    let newID = Math.floor(Math.random() * 10000)
+    if (personsJSON.find(person => person.id === newID.toString())) {
+        return generateId()
+    }
+    return newID
+}
+
 app.get('/api/persons', (request, response) => {
     response.json(personsJSON)
 })
@@ -48,6 +56,13 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
     }
 
+})
+
+app.post('/api/persons', (request, response) => {
+    const newPerson = request.body
+    newPerson.id = generateId().toString()
+    personsJSON.push(newPerson)
+    response.json(newPerson)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
