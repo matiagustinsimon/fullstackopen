@@ -9,7 +9,7 @@ GET http://localhost:3001/api/persons/1
 ###
 
 ### Borrar una nota (DELETE) - ¡Lo que querías probar!
-DELETE http://localhost:3001/api/notes/1
+DELETE http://localhost:3001/api/persons/1
 
 ###
 
