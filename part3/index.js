@@ -60,6 +60,15 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const newPerson = request.body
+    if (!newPerson.name) {
+        return response.status(400).json({ error: 'no name sent' })
+    }
+    if (!newPerson.number) {
+        return response.status(400).json({ error: 'no number sent' })
+    }
+    if (personsJSON.some(person => person.name === newPerson.name)) {
+        return response.status(400).json({ error: 'name must be unique' })
+    }
     newPerson.id = generateId().toString()
     personsJSON.push(newPerson)
     response.json(newPerson)
