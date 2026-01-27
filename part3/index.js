@@ -1,7 +1,9 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let personsJSON = [
     {
@@ -25,7 +27,7 @@ let personsJSON = [
         "number": "39-23-6423122"
     }
 ]
-personsJSON.map(person => console.log(person))
+// personsJSON.map(person => console.log(person))
 
 const generateId = () => {
     let newID = Math.floor(Math.random() * 10000)
