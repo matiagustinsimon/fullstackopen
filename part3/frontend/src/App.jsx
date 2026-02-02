@@ -25,6 +25,7 @@ const Person = ({person, handleDelete}) => {
 }
 
 const Persons = ({personsToShow, handleDelete}) => {
+    // console.log(personsToShow)
     return (
         <ul>
             {personsToShow.map(person =>
@@ -51,6 +52,7 @@ const App = () => {
             .getAll()
             .then(initialPersons => {
                 setPersons(initialPersons)
+                console.log(initialPersons)
             })
     }, [])
 
