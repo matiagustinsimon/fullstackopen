@@ -42,7 +42,7 @@ let personsJSON = [
         "number": "39-23-6423122"
     }
 ]
-// personsJSON.map(person => console.log(person))
+personsJSON.find
 
 const generateId = () => {
     let newID = Math.floor(Math.random() * 10000)
