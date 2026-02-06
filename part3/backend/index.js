@@ -1,9 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const Person = require('./models/person')
 
 app.use(express.static('dist'))
-
 app.use(express.json())
 app.use(morgan((tokens, req, res) => {
     const arrayFormat = [
@@ -13,54 +14,25 @@ app.use(morgan((tokens, req, res) => {
         tokens.res(req, res, 'content-length'), '-',
         tokens['response-time'](req, res), 'ms'
     ]
-    // console.log((req.body))
     if (tokens.method(req, res) === "POST") {
         arrayFormat.push(JSON.stringify(req.body))
     }
     return arrayFormat.join(' ')
 }))
 
-let personsJSON = [
-    {
-        "id": "1",
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": "2",
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": "3",
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": "4",
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-]
-personsJSON.find
-
-const generateId = () => {
-    let newID = Math.floor(Math.random() * 10000)
-    if (personsJSON.find(person => person.id === newID.toString())) {
-        return generateId()
-    }
-    return newID
-}
-
 app.get('/api/persons', (request, response) => {
-    response.json(personsJSON)
+    Person.find({}).then((persons) => {
+        return response.json(persons)
+    })
 })
 
 app.get('/info', (request, response) => {
-    const fecha = Date()
-    response.send(`
-        <p>Phonebook has info for ${personsJSON.length} people</p>
+    Person.countDocuments({}).then((count) => {
+        const fecha = Date()
+        response.send(`
+        <p>Phonebook has info for ${count} people</p>
         <p>${fecha}</p>`)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -72,7 +44,6 @@ app.get('/api/persons/:id', (request, response) => {
     } else {
         response.status(404).end()
     }
-
 })
 
 app.post('/api/persons', (request, response) => {
@@ -83,7 +54,7 @@ app.post('/api/persons', (request, response) => {
     if (!newPerson.number) {
         return response.status(400).json({ error: 'no number sent' })
     }
-    if (personsJSON.some(person => person.name === newPerson.name)) {
+    if (Person.findOne({ name: newPerson.name })) {
         return response.status(400).json({ error: 'name must be unique' })
     }
     newPerson.id = generateId().toString()
