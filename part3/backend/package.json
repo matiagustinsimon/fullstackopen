@@ -21,6 +21,7 @@
     "morgan": "^1.10.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "shx": "^0.4.0"
   }
 }
