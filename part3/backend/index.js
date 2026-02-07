@@ -36,14 +36,13 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = personsJSON.find(p => p.id === id)
-
-    if (person) {
-        response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    Person.findById(request.params.id).then(person => {
+        if (person) {
+            response.json(person)
+        } else {
+            response.status(404).end()
+        }
+    })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -54,21 +53,27 @@ app.post('/api/persons', (request, response) => {
     if (!newPerson.number) {
         return response.status(400).json({ error: 'no number sent' })
     }
-    if (Person.findOne({ name: newPerson.name })) {
-        return response.status(400).json({ error: 'name must be unique' })
-    }
-    newPerson.id = generateId().toString()
-    personsJSON.push(newPerson)
-    response.json(newPerson)
+    Person.findOne({ name: newPerson.name }).then((db_person) => {
+        if (db_person) {return response.status(400).json({ error: 'name must be unique' })}
+        const person = new Person({
+            name: newPerson.name,
+            number: newPerson.number,
+        })
+
+        person.save().then((savedPerson) => {
+            response.json(savedPerson)
+        })
+    })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    console.log(`Persona borrada: `, personsJSON.find(p => p.id === id));
-    personsJSON = personsJSON.filter(p => p.id !== id)
-    personsJSON.map(person => console.log(person))
-    response.status(204).end()
-})
+//Useful later
+// app.delete('/api/persons/:id', (request, response) => {
+//     const id = request.params.id
+//     console.log(`Persona borrada: `, personsJSON.find(p => p.id === id));
+//     personsJSON = personsJSON.filter(p => p.id !== id)
+//     personsJSON.map(person => console.log(person))
+//     response.status(204).end()
+// })
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
