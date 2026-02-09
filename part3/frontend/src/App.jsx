@@ -25,7 +25,6 @@ const Person = ({person, handleDelete}) => {
 }
 
 const Persons = ({personsToShow, handleDelete}) => {
-    // console.log(personsToShow)
     return (
         <ul>
             {personsToShow.map(person =>
@@ -52,8 +51,7 @@ const App = () => {
             .getAll()
             .then(initialPersons => {
                 setPersons(initialPersons)
-                console.log(initialPersons)
-            })
+            }).catch(error => console.log(error))
     }, [])
 
     const personsToShow = search === ''
@@ -71,7 +69,7 @@ const App = () => {
 
     const handleSearchChange = event => setSearch(event.target.value)
 
-    function showNotification(text, error) {
+    const showNotification = (text, error) => {
         error ? setMessage({text: text, type: 'error'}) : setMessage({text: text, type: 'text'})
         setTimeout(() => {
             setMessage({
@@ -92,14 +90,17 @@ const App = () => {
             if (window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
                 const personToUpdate = {...existingPerson, number: newPerson.number}
                 personService
-                    .update(existingPerson.id,personToUpdate)
+                    .update(existingPerson.id, personToUpdate)
                     .then(updatedPerson => {
                         setPersons(persons.map(p => (updatedPerson.id === p.id) ? updatedPerson : p))
-                        setNewPerson({ name: '', number: '' })
+                        setNewPerson({name: '', number: ''})
                         showNotification(`Updated ${updatedPerson.name}`, false)
                     })
                     .catch(err => {
-                        console.log(err)
+                        if (err.response?.data?.error) {
+                            showNotification(err.response.data.error, true)
+                            return
+                        }
                         showNotification(`Information of ${existingPerson.name} has already been removed from the server`, true)
                         setPersons(persons.filter(n => n.id !== existingPerson.id))
                     })
@@ -120,9 +121,11 @@ const App = () => {
                     number: ''
                 })
                 showNotification(`Added ${returnedPerson.name}`, false)
-            })
-
-
+            }).catch((err) => {
+            showNotification(err.response.data.error, true)
+            console.log(err.response.data.error)
+            console.log(err)
+        })
     }
 
     const handleDelete = personToDelete => {
