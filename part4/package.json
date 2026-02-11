@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "test": "node --test",
     "lint": "eslint ."
   },
   "keywords": [],
