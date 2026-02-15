@@ -12,6 +12,7 @@ mongoose
   .connect(config.MONGODB_URI, { family: 4 })
   .then(() => {
     logger.info('connected to MongoDB')
+    console.log(config.MONGODB_URI)
   })
   .catch((error) => {
     logger.error('error connection to MongoDB:', error.message)
