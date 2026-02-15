@@ -19,6 +19,10 @@ describe('Testing HTTP methods', () => {
     const response = await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
     assert.strictEqual(response.body.length, initialBlogs.length)
   })
+  test('The unique identifier property named id not _id', async () => {
+    const response = await api.get('/api/blogs').expect(200)
+    response.body.forEach(blog => {assert.strictEqual('id' in blog, true)})
+  })
 })
 
 after(async () => {
