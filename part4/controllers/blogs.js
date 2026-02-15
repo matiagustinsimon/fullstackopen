@@ -6,19 +6,16 @@ blogRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogRouter.get('/:id', (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then(blog => {
-      if (blog) {
-        response.json(blog)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+blogRouter.get('/:id', async (request, response, next) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
+  } else {
+    response.status(404).end()
+  }
 })
 
-blogRouter.post('/', (request, response, next) => {
+blogRouter.post('/', async (request, response) => {
   const body = request.body
 
   const blog = new Blog({
@@ -27,10 +24,8 @@ blogRouter.post('/', (request, response, next) => {
     url: body.url,
     likes: body.likes,
   })
-
-  blog.save().then((result) => {
-    response.status(201).json(result)
-  }).catch(error => next(error))
+  const result = await blog.save()
+  response.status(201).json(result)
 })
 
 blogRouter.delete('/:id', (request, response, next) => {

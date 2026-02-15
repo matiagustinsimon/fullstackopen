@@ -13,4 +13,4 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
-module.exports = { notesInDb: blogsInDb, nonExistingId }
+module.exports = { blogsInDb, nonExistingId }

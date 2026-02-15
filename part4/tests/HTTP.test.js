@@ -5,7 +5,7 @@ const app = require('../app')
 const Blog = require('../models/blog')
 const initialBlogs = require('./blogs_for_test')
 const mongoose = require('mongoose')
-// const helper = require('./test_helper')
+const helper = require('./test_helper')
 
 const api = supertest(app)
 
@@ -22,6 +22,19 @@ describe('Testing HTTP methods', () => {
   test('The unique identifier property named id not _id', async () => {
     const response = await api.get('/api/blogs').expect(200)
     response.body.forEach(blog => {assert.strictEqual('id' in blog, true)})
+  })
+  test('HTTP POST BLOGS', async () => {
+    const newBlog = {
+      title: 'Second class tests',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+      likes: 100
+    }
+    await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/)
+    const dbArray = await helper.blogsInDb()
+    const titles = dbArray.map(blog => blog.title)
+    assert(titles.includes('Second class tests'))
+    assert.strictEqual(initialBlogs.length + 1, dbArray.length)
   })
 })
 
