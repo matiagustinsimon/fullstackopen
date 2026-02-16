@@ -67,6 +67,28 @@ describe('Testing HTTP methods', () => {
     const blogsAfterDelete = await helper.blogsInDb()
     assert.strictEqual(blogsBeforeDelete.length, blogsAfterDelete.length)
   })
+  test('HTTP PUT BLOGS with valid id', async () => {
+    const blogsInDb = await helper.blogsInDb()
+    const response = await api.put(`/api/blogs/${blogsInDb[0].id}`).send(newBlog).expect(200)
+    const UpdatedPerson = response.body
+    newBlog.id = blogsInDb[0].id
+    assert.deepStrictEqual(UpdatedPerson, newBlog)
+  })
+  test('HTTP PUT BLOGS with invalid id', async () => {
+    const invalidId = await helper.nonExistingId()
+    await api.put(`/api/blogs/${invalidId}`).send(newBlog).expect(404)
+  })
+  test('UnknownEndpoint and malformatted id', async () => {
+    const url = '/api/unknown'
+    let response = await api.get(url).expect(404)
+    assert.strictEqual(response.error.text, '{"error":"unknown endpoint"}')
+    response = await api.post(url).send(newBlog).expect(404)
+    assert.strictEqual(response.error.text, '{"error":"unknown endpoint"}')
+    response = await api.put('/api/blogs/unknown').send(newBlog).expect(400)
+    assert.strictEqual(response.error.text, '{"error":"malformatted id"}')
+    response = await api.delete('/api/blogs/unknown').expect(400)
+    assert.strictEqual(response.error.text, '{"error":"malformatted id"}')
+  })
 })
 
 after(async () => {
