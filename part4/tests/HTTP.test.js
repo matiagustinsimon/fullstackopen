@@ -54,6 +54,19 @@ describe('Testing HTTP methods', () => {
     await api.post('/api/blogs').send(blogWithoutTitle).expect(400)
     await api.post('/api/blogs').send(blogWithoutUrl).expect(400)
   })
+  test('HTTP DELETE BLOGS with valid id', async () => {
+    const blogsBeforeDelete = await helper.blogsInDb()
+    await api.delete(`/api/blogs/${blogsBeforeDelete[0].id}`).expect(204)
+    const blogsAfterDelete = await helper.blogsInDb()
+    assert.strictEqual(blogsBeforeDelete.length - 1, blogsAfterDelete.length)
+  })
+  test('HTTP DELETE BLOGS with invalid id', async () => {
+    const blogsBeforeDelete = await helper.blogsInDb()
+    const invalidId = await helper.nonExistingId()
+    await api.delete(`/api/blogs/${invalidId}`).expect(204)
+    const blogsAfterDelete = await helper.blogsInDb()
+    assert.strictEqual(blogsBeforeDelete.length, blogsAfterDelete.length)
+  })
 })
 
 after(async () => {
