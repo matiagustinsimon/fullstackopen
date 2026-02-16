@@ -36,6 +36,18 @@ describe('Testing HTTP methods', () => {
     assert(titles.includes('Second class tests'))
     assert.strictEqual(initialBlogs.length + 1, dbArray.length)
   })
+  test('missing likes', async () => {
+    const newBlog = {
+      title: 'Second class tests',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll'
+    }
+    const response = await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/)
+    const responseBlog = await Blog.findById(response.body.id)
+    assert(responseBlog.likes === 0)
+    const dbArray = await helper.blogsInDb()
+    assert.strictEqual(initialBlogs.length + 1, dbArray.length)
+  })
 })
 
 after(async () => {
