@@ -1,12 +1,11 @@
 GET http://localhost:3003/api/blogs
 
 ###
-POST http://localhost:3003/api/blogs
+POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-  "author": "Juan",
-  "title": "FSO",
-  "url": "FSO.com",
-  "likes": 10
+  "username": "Juan67",
+  "name": "Juan",
+  "password": "Juancete123"
 }
