@@ -19,7 +19,8 @@
     "dotenv": "^17.2.4",
     "express": "^5.2.1",
     "lodash": "^4.17.23",
-    "mongoose": "^9.2.0"
+    "mongoose": "^9.2.0",
+    "mongoose-unique-validator": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

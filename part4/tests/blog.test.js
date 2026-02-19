@@ -3,9 +3,10 @@ const assert = require('node:assert')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
-const initialBlogs = require('./blogs_for_test')
 const mongoose = require('mongoose')
-const helper = require('./test_helper')
+const helper = require('./blogs_test_helper')
+
+const initialBlogs = helper.blogs
 
 const api = supertest(app)
 
@@ -48,7 +49,7 @@ describe('Testing HTTP methods', () => {
   })
   test('Missing title or url', async () => {
     // eslint-disable-next-line no-unused-vars
-    const { title, ...blogWithoutTitle } = { ...newBlog }
+    const { title, ...blogWithoutTitle } = newBlog
     // eslint-disable-next-line no-unused-vars
     const { url, ...blogWithoutUrl } = newBlog
     await api.post('/api/blogs').send(blogWithoutTitle).expect(400)
