@@ -1,11 +1,12 @@
 GET http://localhost:3003/api/blogs
 
 ###
-POST http://localhost:3003/api/users
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "username": "Juan67",
-  "name": "Juan",
-  "password": "Juancete123"
+  "title": "Star wars",
+  "author": "Robert C. Martin",
+  "url": "http://blog.cleancoder.com/uncle-bob/2016/06/01/TypeWars.js",
+  "likes": 10
 }
