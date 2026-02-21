@@ -23,6 +23,10 @@ blogRouter.post('/', userExtractor, async (request, response) => {
 
   const user = request.user
 
+  if (!user) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
   const blog = new Blog({
     title: body.title,
     author: body.author,
@@ -46,7 +50,7 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
   const blogToDelete = await Blog.findById(request.params.id)
 
   if (!blogToDelete) {
-    return response.status(404).json({ error: 'blog not found' })
+    return response.status(204).json({ error: 'blog not found' })
   }
 
   if (blogToDelete.user.toString() !== user._id.toString()) {
@@ -59,16 +63,31 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
   return response.status(204).end()
 })
 
-blogRouter.put('/:id', async (request, response) => {
+blogRouter.put('/:id', userExtractor, async (request, response) => {
   const body = request.body
+
+  const user = request.user
+
+  if (!user) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
   const blog = await Blog.findById(request.params.id)
   if (!blog) {
-    return response.status(404).end()
+    return response.status(404).json({
+      error: 'no blog found'
+    })
   }
-  blog.title = body.title
-  blog.author = body.author
-  blog.url = body.url
-  blog.likes = body.likes
+
+  if (blog.user.toString() !== user._id.toString()) {
+    return response.status(401).json({
+      error: 'only the creator can change this blog'
+    })
+  }
+  blog.title = body.title ?? blog.title
+  blog.author = body.author ?? blog.author
+  blog.url = body.url ?? blog.url
+  blog.likes = body.likes ?? blog.likes
   const updatedBlog = await blog.save()
   response.json(updatedBlog)
 })

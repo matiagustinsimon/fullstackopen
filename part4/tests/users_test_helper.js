@@ -1,6 +1,4 @@
 const User = require('../models/user')
-const Blog = require('../models/blog')
-const { blogsInDb } = require('./blogs_test_helper')
 
 const users = [
   {
