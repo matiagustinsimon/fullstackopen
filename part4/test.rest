@@ -56,3 +56,9 @@ Authorization: Bearer un_token_completamente_inventado_y_falso
   "url": "https://fsociety.com",
   "likes": 999
 }
+
+###
+
+DELETE http://localhost:3003/api/blogs/6998ea23c5c82147750c062c
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hdGlhc0dhbWVyIiwiaWQiOiI2OTk4MGMyOWFhMmY2ZWRiMTFiOTIzZDYiLCJpYXQiOjE3NzE2MTk0Mjd9.JWK_nRVKbCyJKduhhEejE1DJYBs5Y5V8GeI25A2fY3o
