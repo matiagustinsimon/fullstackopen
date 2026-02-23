@@ -16,7 +16,7 @@ const FormPiece = ({state, name, setName}) => {
   )
 }
 
-const BlogCreate = ({blogs, setBlogs, setNotification}) => {
+const BlogCreate = ({blogs, setBlogs, setNotification, blogFormRef}) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -27,6 +27,7 @@ const BlogCreate = ({blogs, setBlogs, setNotification}) => {
       const newBlog = { title, author, url }
       const returnedBlog = await blogService.create(newBlog)
       setBlogs(blogs.concat(returnedBlog))
+      blogFormRef.current.toggleVisibility()
       setTitle('')
       setAuthor('')
       setUrl('')

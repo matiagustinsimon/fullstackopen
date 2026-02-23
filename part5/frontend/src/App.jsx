@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import {useState, useEffect, useRef} from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import BlogCreate from './components/BlogCreate'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -23,6 +24,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -51,6 +53,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotification({message: 'Succesful login', type: 'text'})
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch {
       setNotification({message: 'wrong credentials', type: 'error'})
       setTimeout(() => {
@@ -87,7 +93,14 @@ const App = () => {
         <span>{user.username} logged in</span>
         <button onClick={handleLogOut}>Log Out</button>
       </div>
-      <BlogCreate blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
+      <Togglable buttonLabel={'Create Blog'} ref={blogFormRef}>
+        <BlogCreate
+          blogs={blogs}
+          setBlogs={setBlogs}
+          setNotification={setNotification}
+          blogFormRef={blogFormRef}
+        />
+      </Togglable>
       <BlogList blogs={blogs} />
     </>
   )
