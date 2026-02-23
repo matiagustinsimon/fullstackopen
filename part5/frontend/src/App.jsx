@@ -11,9 +11,7 @@ const BlogList = ({blogs}) => {
   return (
     <>
       <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
     </>
   )
 }
@@ -93,7 +91,7 @@ const App = () => {
         <span>{user.username} logged in</span>
         <button onClick={handleLogOut}>Log Out</button>
       </div>
-      <Togglable buttonLabel={'Create Blog'} ref={blogFormRef}>
+      <Togglable buttonShow={'Create Blog'} buttonHide={'Cancel'} ref={blogFormRef}>
         <BlogCreate
           blogs={blogs}
           setBlogs={setBlogs}
