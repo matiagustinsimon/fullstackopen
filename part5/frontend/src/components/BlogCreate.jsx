@@ -16,20 +16,31 @@ const FormPiece = ({state, name, setName}) => {
   )
 }
 
-const BlogCreate = ({blogs, setBlogs}) => {
+const BlogCreate = ({blogs, setBlogs, setNotification}) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const handleNewBlog = async (event) => {
-    event.preventDefault()
-    const newBlog = { title, author, url }
-    const returnedBlog = await blogService.create(newBlog)
-    console.log(returnedBlog)
-    setBlogs(blogs.concat(returnedBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    try {
+      event.preventDefault()
+      const newBlog = { title, author, url }
+      const returnedBlog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setNotification({message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'text'})
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+    catch (error) {
+      setNotification({message: error.response.data.error, type: 'error'})
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
   }
 
   return (

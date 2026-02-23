@@ -22,7 +22,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -52,9 +52,9 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch {
-      setMessage('wrong credentials')
+      setNotification({message: 'wrong credentials', type: 'error'})
       setTimeout(() => {
-        setMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -68,7 +68,7 @@ const App = () => {
   if (!user) {
     return (
       <>
-        <Notification message={message}/>
+        {notification ? <Notification message={notification.message} type={notification.type} /> : null}
         <LoginForm
           username={username}
           setUsername={setUsername}
@@ -82,12 +82,12 @@ const App = () => {
 
   return (
     <>
-      <Notification message={message}/>
+      {notification ? <Notification message={notification.message} type={notification.type} /> : null}
       <div>
         <span>{user.username} logged in</span>
         <button onClick={handleLogOut}>Log Out</button>
       </div>
-      <BlogCreate blogs={blogs} setBlogs={setBlogs}/>
+      <BlogCreate blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
       <BlogList blogs={blogs} />
     </>
   )
