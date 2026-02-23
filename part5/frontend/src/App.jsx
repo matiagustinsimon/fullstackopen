@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import BlogCreate from './components/BlogCreate'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
 
 const BlogList = ({blogs}) => {
   return (
@@ -87,6 +87,7 @@ const App = () => {
         <span>{user.username} logged in</span>
         <button onClick={handleLogOut}>Log Out</button>
       </div>
+      <BlogCreate blogs={blogs} setBlogs={setBlogs}/>
       <BlogList blogs={blogs} />
     </>
   )
