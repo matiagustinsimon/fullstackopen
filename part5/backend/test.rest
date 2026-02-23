@@ -1,0 +1,64 @@
+GET http://localhost:3003/api/blogs
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Star wars",
+  "author": "Robert C. Martin",
+  "url": "http://blog.cleancoder.com/uncle-bob/2016/06/01/TypeWars.js",
+  "likes": 10
+}
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "MatiasGamer",
+    "name" : "Matias",
+    "password": "1234"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "MatiasGamer",
+  "password": "1234"
+}
+
+###
+### Crear un blog protegido con Token
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hdGlhc0dhbWVyIiwiaWQiOiI2OTk4MGMyOWFhMmY2ZWRiMTFiOTIzZDYiLCJpYXQiOjE3NzE2MTk0Mjd9.JWK_nRVKbCyJKduhhEejE1DJYBs5Y5V8GeI25A2fY3o
+
+{
+  "title": "Mi primer blog con seguridad total",
+  "author": "MatiasGamer",
+  "url": "https://matiasgamer.dev",
+  "likes": 100
+}
+
+###
+
+### Test de intrusión: Intento de crear blog con token falso
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer un_token_completamente_inventado_y_falso
+
+{
+  "title": "Blog hacker",
+  "author": "Mr. Robot",
+  "url": "https://fsociety.com",
+  "likes": 999
+}
+
+###
+
+DELETE http://localhost:3003/api/blogs/6998ea23c5c82147750c062c
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hdGlhc0dhbWVyIiwiaWQiOiI2OTk4MGMyOWFhMmY2ZWRiMTFiOTIzZDYiLCJpYXQiOjE3NzE2MTk0Mjd9.JWK_nRVKbCyJKduhhEejE1DJYBs5Y5V8GeI25A2fY3o
