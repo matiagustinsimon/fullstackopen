@@ -7,12 +7,12 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const BlogList = ({blogs, setBlogs, setNotification}) => {
+const BlogList = ({blogs, setBlogs, setNotification, user}) => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
   return (
     <>
       <h2>blogs</h2>
-      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>)}
+      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} user={user}/>)}
     </>
   )
 }
@@ -100,7 +100,7 @@ const App = () => {
           blogFormRef={blogFormRef}
         />
       </Togglable>
-      <BlogList blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
+      <BlogList blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} user={user}/>
     </>
   )
 }

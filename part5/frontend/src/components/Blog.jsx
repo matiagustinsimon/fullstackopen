@@ -2,10 +2,12 @@ import './Blog.css'
 import {useState} from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs, setNotification }) => {
+const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
+  console.log(blog)
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
+  const deleteShowWhenVisible = { display: visible && blog.user.username === user.username ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -27,6 +29,23 @@ const Blog = ({ blog, blogs, setBlogs, setNotification }) => {
       }, 5000)
     }
   }
+  const handleDelete = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(b => blog.id !== b.id))
+        setNotification({message: `the blog ${blog.title} by ${blog.author} has been deleted`, type: 'text'})
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      } catch (error) {
+        setNotification({message: error.response?.data?.error || 'Error deleting the blog', type: 'error'})
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      }
+    }
+  }
   return (
     <div className="blog-container">
       <div>
@@ -43,6 +62,7 @@ const Blog = ({ blog, blogs, setBlogs, setNotification }) => {
       <div style={showWhenVisible}>
         {blog.user.name}
       </div>
+      <button style={deleteShowWhenVisible} onClick={handleDelete}>remove</button>
     </div>
   )
 }
