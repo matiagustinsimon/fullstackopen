@@ -8,10 +8,11 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const BlogList = ({blogs, setBlogs, setNotification}) => {
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
   return (
     <>
       <h2>blogs</h2>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>)}
+      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>)}
     </>
   )
 }
