@@ -7,11 +7,11 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const BlogList = ({blogs}) => {
+const BlogList = ({blogs, setBlogs, setNotification}) => {
   return (
     <>
       <h2>blogs</h2>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+      {blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>)}
     </>
   )
 }
@@ -99,7 +99,7 @@ const App = () => {
           blogFormRef={blogFormRef}
         />
       </Togglable>
-      <BlogList blogs={blogs} />
+      <BlogList blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>
     </>
   )
 }

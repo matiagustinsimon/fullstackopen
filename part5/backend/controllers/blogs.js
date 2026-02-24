@@ -1,7 +1,5 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 const { userExtractor } = require('../utils/middleware')
 
 blogRouter.get('/', async (request, response) => {
@@ -72,7 +70,7 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
 
-  const blog = await Blog.findById(request.params.id)
+  const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
   if (!blog) {
     return response.status(404).json({
       error: 'no blog found'
@@ -80,9 +78,9 @@ blogRouter.put('/:id', userExtractor, async (request, response) => {
   }
 
   if (blog.user.toString() !== user._id.toString()) {
-    return response.status(401).json({
-      error: 'only the creator can change this blog'
-    })
+    blog.likes = body.likes ?? blog.likes
+    const updatedLikes = await blog.save()
+    return response.json(updatedLikes)
   }
   blog.title = body.title ?? blog.title
   blog.author = body.author ?? blog.author
