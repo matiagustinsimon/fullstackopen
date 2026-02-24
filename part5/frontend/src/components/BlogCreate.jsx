@@ -1,7 +1,7 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const FormPiece = ({state, name, setName}) => {
+const FormPiece = ({ state, name, setName }) => {
   return (
     <div>
       <label>
@@ -16,7 +16,7 @@ const FormPiece = ({state, name, setName}) => {
   )
 }
 
-const BlogCreate = ({blogs, setBlogs, setNotification, blogFormRef}) => {
+const BlogCreate = ({ blogs, setBlogs, setNotification, blogFormRef }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -31,13 +31,13 @@ const BlogCreate = ({blogs, setBlogs, setNotification, blogFormRef}) => {
       setTitle('')
       setAuthor('')
       setUrl('')
-      setNotification({message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'text'})
+      setNotification({ message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'text' })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     }
     catch (error) {
-      setNotification({message: error.response.data.error, type: 'error'})
+      setNotification({ message: error.response.data.error, type: 'error' })
       setTimeout(() => {
         setNotification(null)
       }, 5000)

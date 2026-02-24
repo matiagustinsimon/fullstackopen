@@ -15,7 +15,6 @@ const getAll = () => {
 }
 
 const create = async newObject => {
-  // 3. Simplemente le pasamos la variable config a axios
   const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }

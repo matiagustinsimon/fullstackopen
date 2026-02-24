@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
@@ -7,7 +7,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const BlogList = ({blogs, setBlogs, setNotification, user}) => {
+const BlogList = ({ blogs, setBlogs, setNotification, user }) => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
   return (
     <>
@@ -52,12 +52,12 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setNotification({message: 'Succesful login', type: 'text'})
+      setNotification({ message: 'Succesful login', type: 'text' })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     } catch {
-      setNotification({message: 'wrong credentials', type: 'error'})
+      setNotification({ message: 'wrong credentials', type: 'error' })
       setTimeout(() => {
         setNotification(null)
       }, 5000)

@@ -1,5 +1,5 @@
 import './Blog.css'
-import {useState} from 'react'
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
@@ -15,15 +15,15 @@ const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
 
   const handleNewLike = async () => {
     try {
-      const putBlog = {...blog, likes: blog.likes + 1, user: blog.user.id}
+      const putBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
       const returnedBlog = await blogService.update(putBlog.id, putBlog)
       setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
-      setNotification({message: `the blog ${returnedBlog.title} by ${returnedBlog.author} has a new like`, type: 'text'})
+      setNotification({ message: `the blog ${returnedBlog.title} by ${returnedBlog.author} has a new like`, type: 'text' })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     } catch (error) {
-      setNotification({message: error.response?.data?.error || 'Error liking blog', type: 'error'})
+      setNotification({ message: error.response?.data?.error || 'Error liking blog', type: 'error' })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
@@ -34,12 +34,12 @@ const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
       try {
         await blogService.remove(blog.id)
         setBlogs(blogs.filter(b => blog.id !== b.id))
-        setNotification({message: `the blog ${blog.title} by ${blog.author} has been deleted`, type: 'text'})
+        setNotification({ message: `the blog ${blog.title} by ${blog.author} has been deleted`, type: 'text' })
         setTimeout(() => {
           setNotification(null)
         }, 5000)
       } catch (error) {
-        setNotification({message: error.response?.data?.error || 'Error deleting the blog', type: 'error'})
+        setNotification({ message: error.response?.data?.error || 'Error deleting the blog', type: 'error' })
         setTimeout(() => {
           setNotification(null)
         }, 5000)
