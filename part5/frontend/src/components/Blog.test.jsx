@@ -10,6 +10,8 @@ const blog = {
   user: { name: 'Admin', username: 'adminuser' }
 }
 
+const handleNewLike = vi.fn()
+
 describe('Blog', () => {
   beforeEach(() => {
     render( <Blog
@@ -18,6 +20,7 @@ describe('Blog', () => {
       setBlogs={vi.fn()}
       setNotification={vi.fn()}
       user={{ username: 'testuser' }}
+      handleNewLike={handleNewLike}
     /> )
   })
   test('renders only title and author', () => {
@@ -31,13 +34,27 @@ describe('Blog', () => {
     const elementUser = screen.getByText(/Admin/)
     expect(elementUser).not.toBeVisible()
   })
-  test('after clicking the button, url, likes and users are displayed', async () => {
+  test('after clicking the view button, url, likes and users are displayed', async () => {
     const user = userEvent.setup()
     const button = screen.getByText('view')
     await user.click(button)
 
     const elementUrl = screen.getByText(/test.com/)
     expect(elementUrl).toBeVisible()
+    const elementLikes = screen.getByText(/likes 0/)
+    expect(elementLikes).toBeVisible()
+    const elementUser = screen.getByText(/Admin/)
+    expect(elementUser).toBeVisible()
+  })
+  test('after clicking the like button twice, 2 likes ', async () => {
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+    expect(handleNewLike.mock.calls).toHaveLength(2)
     const elementLikes = screen.getByText(/likes 0/)
     expect(elementLikes).toBeVisible()
     const elementUser = screen.getByText(/Admin/)

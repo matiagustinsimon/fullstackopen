@@ -2,7 +2,7 @@ import './Blog.css'
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
+const Blog = ({ blog, blogs, setBlogs, setNotification, user, handleNewLike }) => {
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -10,23 +10,6 @@ const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
 
   const toggleVisibility = () => {
     setVisible(!visible)
-  }
-
-  const handleNewLike = async () => {
-    try {
-      const putBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
-      const returnedBlog = await blogService.update(putBlog.id, putBlog)
-      setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
-      setNotification({ message: `the blog ${returnedBlog.title} by ${returnedBlog.author} has a new like`, type: 'text' })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    } catch (error) {
-      setNotification({ message: error.response?.data?.error || 'Error liking blog', type: 'error' })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    }
   }
   const handleDelete = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
@@ -56,7 +39,7 @@ const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
       </div>
       <div style={showWhenVisible}>
         likes {blog.likes}
-        <button onClick={handleNewLike}>like</button>
+        <button onClick={() => handleNewLike(blog)}>like</button>
       </div>
       <div style={showWhenVisible}>
         {blog.user.name}

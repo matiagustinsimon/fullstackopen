@@ -7,12 +7,12 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const BlogList = ({ blogs, setBlogs, setNotification, user }) => {
+const BlogList = ({ blogs, setBlogs, setNotification, user, handleNewLike }) => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
   return (
     <>
       <h2>blogs</h2>
-      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} user={user}/>)}
+      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} user={user} handleNewLike={handleNewLike}/>)}
     </>
   )
 }
@@ -70,6 +70,23 @@ const App = () => {
     blogService.setToken(null)
   }
 
+  const handleNewLike = async (blog) => {
+    try {
+      const putBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+      const returnedBlog = await blogService.update(putBlog.id, putBlog)
+      setBlogs(blogs.map(blog => blog.id === returnedBlog.id ? returnedBlog : blog))
+      setNotification({ message: `the blog ${returnedBlog.title} by ${returnedBlog.author} has a new like`, type: 'text' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (error) {
+      setNotification({ message: error.response?.data?.error || 'Error liking blog', type: 'error' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
   if (!user) {
     return (
       <>
@@ -100,7 +117,7 @@ const App = () => {
           blogFormRef={blogFormRef}
         />
       </Togglable>
-      <BlogList blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} user={user}/>
+      <BlogList blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} user={user} handleNewLike={handleNewLike}/>
     </>
   )
 }
