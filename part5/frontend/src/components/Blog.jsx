@@ -3,7 +3,6 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, blogs, setBlogs, setNotification, user }) => {
-  console.log(blog)
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
