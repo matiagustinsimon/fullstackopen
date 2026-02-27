@@ -87,6 +87,25 @@ const App = () => {
     }
   }
 
+  const submitBlog = async (title, author, url) => {
+    try {
+      const newBlog = { title, author, url }
+      const returnedBlog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(returnedBlog))
+      blogFormRef.current.toggleVisibility()
+      setNotification({ message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'text' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+    catch (error) {
+      setNotification({ message: error.response.data.error, type: 'error' })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+  }
+
   if (!user) {
     return (
       <>
@@ -111,10 +130,7 @@ const App = () => {
       </div>
       <Togglable buttonShow={'Create Blog'} buttonHide={'Cancel'} ref={blogFormRef}>
         <BlogCreate
-          blogs={blogs}
-          setBlogs={setBlogs}
-          setNotification={setNotification}
-          blogFormRef={blogFormRef}
+          submitBlog={submitBlog}
         />
       </Togglable>
       <BlogList blogs={blogs} setBlogs={setBlogs} setNotification={setNotification} user={user} handleNewLike={handleNewLike}/>
