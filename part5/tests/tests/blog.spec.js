@@ -15,7 +15,7 @@ const createBlog = async (page, title, author, url) => {
   await page.getByLabel('title').fill(title)
   await page.getByLabel('author').fill(author)
   await page.getByLabel('url').fill(url)
-  await page.getByRole('button', { name: 'Create' }).click()
+  await page.getByRole('button', { name: 'create' }).click()
 }
 
 describe('Blog app', () => {
@@ -77,6 +77,20 @@ describe('Blog app', () => {
       page.on('dialog', dialog => dialog.accept())
       await blogContainer.getByRole('button', { name: 'remove' }).click()
       await expect(blogContainer).not.toBeVisible()
+    })
+    test('a user can only remove his own blogs', async ({ page, request }) => {
+      await createBlog(page, blog.title, blog.author, blog.url)
+      const firstBlogContainer = page.locator('.blog-container').filter({ hasText: blog.title })
+      await page.getByRole('button', { name: 'Log Out' }).click()
+      const diferentUser = { name: 'matias', username: 'MatiasGamer', password: '1234' }
+      await request.post('/api/users', { data: diferentUser })
+      await sendLogin(page, diferentUser.username, diferentUser.password)
+      await createBlog(page, 'blog Gamer', 'Matias gamer', 'gamer.com')
+      const lastBlogContainer = page.locator('.blog-container').filter({ hasText: 'blog Gamer' })
+      await firstBlogContainer.getByRole('button', { name: 'view' }).click()
+      await expect(firstBlogContainer.getByRole('button', { name: 'remove' })).not.toBeVisible()
+      await lastBlogContainer.getByRole('button', { name: 'view' }).click()
+      await expect(lastBlogContainer.getByRole('button', { name: 'remove' })).toBeVisible()
     })
   })
 })
