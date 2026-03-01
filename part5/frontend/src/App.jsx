@@ -52,7 +52,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setNotification({ message: 'Succesful login', type: 'text' })
+      setNotification({ message: `${user.name} logged in`, type: 'text' })
       setTimeout(() => {
         setNotification(null)
       }, 5000)
