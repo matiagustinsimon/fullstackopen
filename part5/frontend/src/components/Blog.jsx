@@ -38,7 +38,7 @@ const Blog = ({ blog, blogs, setBlogs, setNotification, user, handleNewLike }) =
         {blog.url}
       </div>
       <div style={showWhenVisible}>
-        likes {blog.likes}
+        likes <span data-testid="likes-amount">{blog.likes}</span>
         <button onClick={() => handleNewLike(blog)}>like</button>
       </div>
       <div style={showWhenVisible}>
