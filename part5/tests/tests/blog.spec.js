@@ -10,6 +10,14 @@ const sendLogin = async (page, username, password) => {
   await page.getByRole('button', { name: 'login' }).click()
 }
 
+const createBlog = async (page, title, author, url) => {
+  await page.getByRole('button', { name: 'Create Blog' }).click()
+  await page.getByLabel('title').fill(title)
+  await page.getByLabel('author').fill(author)
+  await page.getByLabel('url').fill(url)
+  await page.getByRole('button', { name: 'Create' }).click()
+}
+
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
     await request.post('/api/testing/reset')
@@ -44,16 +52,22 @@ describe('Blog app', () => {
     })
 
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', { name: 'Create Blog' }).click()
-      await page.getByLabel('title').fill(blog.title)
-      await page.getByLabel('author').fill(blog.author)
-      await page.getByLabel('url').fill(blog.url)
-      await page.getByRole('button', { name: 'Create' }).click()
+      await createBlog(page, blog.title, blog.author, blog.url)
       await expect(page.getByText(`a new blog ${blog.title} by ${blog.author} added`)).toBeVisible()
       const blogContainer = page.locator('.blog-container').filter({ hasText: blog.title })
       await expect(blogContainer).toBeVisible()
       await expect(blogContainer).toContainText(blog.title)
       await expect(blogContainer).toContainText(blog.author)
+    })
+    test('a like can be given', async ({ page }) => {
+      await createBlog(page, blog.title, blog.author, blog.url)
+      const blogContainer = page.locator('.blog-container').filter({ hasText: blog.title })
+      const viewButton = blogContainer.getByRole('button', { name: 'view' })
+      await viewButton.click()
+      const likesCount = blogContainer.getByTestId('likes-amount')
+      await expect(likesCount).toHaveText('0')
+      await blogContainer.getByRole('button', { name: 'like' }).click()
+      await expect(likesCount).toHaveText('1')
     })
   })
 })
