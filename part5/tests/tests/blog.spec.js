@@ -18,6 +18,15 @@ const createBlog = async (page, title, author, url) => {
   await page.getByRole('button', { name: 'create' }).click()
 }
 
+const likesCounter = async (blogContainers) => {
+  let numberArray = []
+  for (let i = 0; i < blogContainers.length; i++) {
+    const like = await blogContainers[i].getByTestId('likes-amount').innerText()
+    numberArray.push(Number(like))
+  }
+  return numberArray
+}
+
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
     await request.post('/api/testing/reset')
@@ -91,6 +100,14 @@ describe('Blog app', () => {
       await expect(firstBlogContainer.getByRole('button', { name: 'remove' })).not.toBeVisible()
       await lastBlogContainer.getByRole('button', { name: 'view' }).click()
       await expect(lastBlogContainer.getByRole('button', { name: 'remove' })).toBeVisible()
+    })
+    test('blogs are arranged in the order according to the likes', async ({ page, request }) => {
+      await request.post('/api/testing/create/10')
+      await page.reload()
+      await expect(page.locator('.blog-container').filter({ hasText: 'blog1' })).toBeVisible()
+      const blogContainers = await page.locator('.blog-container').all()
+      const likesArray = await likesCounter(blogContainers)
+      expect(likesArray).toEqual(likesArray.toSorted((a, b) => b - a))
     })
   })
 })
