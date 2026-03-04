@@ -1,25 +1,11 @@
 import ReactDOM from 'react-dom/client'
 import store from './store'
+import { Provider } from 'react-redux'
 
-const App = () => {
-  return (
-    <div>
-      <button onClick={() => store.dispatch({ type: 'GOOD' })}>good</button>
-      <button onClick={() => store.dispatch({ type: 'OK' })}>ok</button>
-      <button onClick={() => store.dispatch({ type: 'BAD' })}>bad</button>
-      <button onClick={() => store.dispatch({ type: 'RESET' })}>reset stats</button>
-      <div>good {store.getState().good}</div>
-      <div>ok {store.getState().ok}</div>
-      <div>bad {store.getState().bad}</div>
-    </div>
-  )
-}
+import App from './App'
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
-
-const renderApp = () => {
-  root.render(<App />)
-}
-
-renderApp()
-store.subscribe(renderApp)
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
