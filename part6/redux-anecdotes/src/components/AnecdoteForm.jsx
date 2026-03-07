@@ -1,5 +1,6 @@
 import {useDispatch} from 'react-redux'
 import {createAnecdote} from '../reducers/anecdoteReducer.js'
+import {removeNotification, setNotification} from '../reducers/notificationReducer.js'
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
@@ -11,6 +12,8 @@ const AnecdoteForm = () => {
     event.target.anecdote.value = ""
     const newAnecdote = { content, id: getId(), votes: 0}
     dispatch(createAnecdote(newAnecdote))
+    dispatch(setNotification(`You created '${newAnecdote.content}'`))
+    setTimeout(() => dispatch(removeNotification()), 5000)
   }
   return(
     <div>
