@@ -8,7 +8,7 @@ const Notification = () => {
     marginBottom: 10
   }
 
-  const notification = useSelector(state => state.notification)
+  const notification = useSelector(state => state.notification.text)
 
   if (!notification) {
     return null
