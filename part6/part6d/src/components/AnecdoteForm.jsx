@@ -13,6 +13,12 @@ const AnecdoteForm = () => {
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
       notificationDispatch({ type: 'CREATE', content: newAnecdote.content })
       setTimeout(()=> notificationDispatch({type: 'RESET'}), 5000)
+    },
+    onError: (error) => {
+        if ( error.message === 'too short anecdote, must have length 5 or more') {
+          notificationDispatch({ type: 'ERROR', content: error.message })
+          setTimeout(()=> notificationDispatch({type: 'RESET'}), 5000)
+        }
     }
   })
 
