@@ -2,8 +2,11 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import { getAnecdotes, updateAnecdote} from './services/anecdoteService.js'
+import { useContext } from 'react'
+import NotificationContext from './NotificationContex.jsx'
 
 const App = () => {
+  const { notificationDispatch } = useContext(NotificationContext)
   const queryClient = useQueryClient()
   const updateAnecdoteMutation = useMutation({
     mutationFn: updateAnecdote,
@@ -11,6 +14,8 @@ const App = () => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       const updatedAnecdotes = anecdotes.map((anecdote) => anecdote.id === updatedAnecdote.id ? updatedAnecdote : anecdote )
       queryClient.setQueryData(['anecdotes'], updatedAnecdotes)
+      notificationDispatch({ type: 'VOTE', content: updatedAnecdote.content })
+      setTimeout(()=> notificationDispatch({type: 'RESET'}), 5000)
     }
   })
   const handleVote = (anecdote) => {
@@ -28,13 +33,14 @@ const App = () => {
     return <div>loading data...</div>
   }
   if (result.isError) {
-    return <Notification message={'anecdote service not available.'} />
+    return < Notification message={'anecdote service not available.'}/>
   }
 
   const anecdotes = result.data
 
   return (
     <div>
+      < Notification />
       <h3>Anecdote app</h3>
       <AnecdoteForm />
 
