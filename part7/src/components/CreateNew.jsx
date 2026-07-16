@@ -7,9 +7,9 @@ const CreateNew = ({ addAnecdote }) => {
   const {reset: resetInfo, ...info} = useField('text')
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    addAnecdote({ content: content.value, author: author.value, info: info.value, votes: 0 })
+    await addAnecdote({ content: content.value, author: author.value, info: info.value, votes: 0 })
     navigate('/')
   }
   
