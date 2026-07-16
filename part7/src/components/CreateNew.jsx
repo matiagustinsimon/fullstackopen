@@ -2,21 +2,15 @@ import { useNavigate } from 'react-router-dom'
 import { useField } from '../hooks/index.js'
 
 const CreateNew = ({ addAnecdote }) => {
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
+  const {reset: resetContent, ...content} = useField('text')
+  const {reset: resetAuthor, ...author} = useField('text')
+  const {reset: resetInfo, ...info} = useField('text')
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     addAnecdote({ content: content.value, author: author.value, info: info.value, votes: 0 })
     navigate('/')
-  }
-
-  const resetAll = () => {
-    content.reset()
-    author.reset()
-    info.reset()
   }
   
   console.log(`Content type: ${content.type}`)
@@ -28,18 +22,18 @@ const CreateNew = ({ addAnecdote }) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' type={content.type} value={content.value} onChange={content.onChange} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name='author' type={author.type} value={author.value} onChange={author.onChange} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' type={info.type} value={info.value} onChange={info.onChange} />
+          <input {...info} />
         </div>
         <button>create</button>
-        <button type="reset" onClick={resetAll}>reset</button>
+        <button type="reset" onClick={() => {resetAuthor(); resetContent(); resetInfo()}}>reset</button>
       </form>
     </div>
   )
