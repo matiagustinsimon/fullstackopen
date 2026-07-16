@@ -12,6 +12,12 @@ const CreateNew = ({ addAnecdote }) => {
     addAnecdote({ content: content.value, author: author.value, info: info.value, votes: 0 })
     navigate('/')
   }
+
+  const resetAll = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
   
   console.log(`Content type: ${content.type}`)
   console.log(`Content value: ${content.value}`)
@@ -33,6 +39,7 @@ const CreateNew = ({ addAnecdote }) => {
           <input name='info' type={info.type} value={info.value} onChange={info.onChange} />
         </div>
         <button>create</button>
+        <button type="reset" onClick={resetAll}>reset</button>
       </form>
     </div>
   )
